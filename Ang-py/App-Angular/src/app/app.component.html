@@ -1,0 +1,162 @@
+<div class="container-fluid page-scrol">
+  <div class="top-bar">
+    <i class="fa fa-bars"></i>
+    <i class="fa fa-user float-right round-icon"></i>
+    <div class="row float-right display-block">
+      <div class="col font-size-3">PLANIFICATEUR DE MISSION</div>
+      <span class="col float-right font-size-0">Account setting</span>
+    </div>
+
+  </div>
+  <div class="side-bar">
+    <a href="#"><i class="fa fa-search"></i></a>
+    <a class="active" href="#"><i class="fa fa-home"></i></a>
+    <a href="#"><i class="fa fa-envelope"></i></a>
+    <a href="#"><i class="fa fa-globe"></i></a>
+    <a href="#"><i class="fa fa-trash"></i></a>
+  </div>
+  <div class="main-content page-scrol">
+    <div class="container-fluid ">
+
+
+      <!-- gestion de mission -->
+      <div class="row">
+        <div class="col-8">
+          <div class="row">
+            <div class="col-6">
+              <div class="card">
+                <div class="card-body">
+                  NBRE DE MISSION D'AUJOURD'HUI <b>{{ numToday }} </b>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card">
+                <div class="card-body">
+                  NBRE DE MISSION A AVENIR <b> {{ numAfter }}</b>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-2">
+            <!-- CALENDAR HEADER -->
+            <div class="card-header text-center">
+              <i class="fa fa-arrow-left float-left pointer" aria-hidden="true" mwlCalendarPreviousView [view]="view"
+                [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()"></i>
+              {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}
+              <i class="fa fa-arrow-right float-right pointer" aria-hidden="true" mwlCalendarNextView [view]="view"
+                [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()"></i>
+            </div>
+
+            <div class="card-body">
+              <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+                [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+                (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventDropped($event)">
+              </mwl-calendar-month-view>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-4">
+          <div class="card" mwlDroppable (drop)="externalDrop($event.dropData.event)" dragOverClass="drag-over">
+            <div class="card-header">
+              Livreur
+            </div>
+            <div class="card-body unset-padding page-scrol">
+              <p *ngIf="deliveryManEvents.length === 0"><em>Aucun Livreur ajouté {{ motoErrMess}}</em></p>
+              <ul class="list-group unset-border-raduis">
+                <ng-container *ngFor="let event of deliveryManEvents">
+                  <li class="list-group-item" mwlDraggable [dropData]="{event: event}" dragActiveClass="drag-active">{{event.title}}</li>
+                </ng-container>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card" mwlDroppable (drop)="externalDrop($event.dropData.event)" dragOverClass="drag-over">
+            <div class="card-header">
+              Moto
+            </div>
+            <div class="card-body unset-padding page-scrol">
+              <p *ngIf="motoEvents.length === 0"><em>Aucun Moto ajouté</em></p>
+              <ul class="list-group unset-border-raduis">
+                <ng-container *ngFor="let event of motoEvents">
+                  <li class="list-group-item" mwlDraggable [dropData]="{event: event}" dragActiveClass="drag-active">{{event.title}}</li>
+                </ng-container>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card" mwlDroppable (drop)="externalDrop($event.dropData.event)" dragOverClass="drag-over">
+            <div class="card-header">
+              Adresses
+            </div>
+            <div class="card-body unset-padding page-scrol">
+              <p *ngIf="addressEvents.length === 0"><em>Aucun Adresse ajouté</em></p>
+              <ul class="list-group unset-border-raduis">
+                <ng-container *ngFor="let event of addressEvents">
+                  <li class="list-group-item" mwlDraggable [dropData]="{event: event}" dragActiveClass="drag-active">{{event.title}}</li>
+                </ng-container>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- affichage de derniers missions -->
+      <div class="row mt-2">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              Dernier Mission Rajouté
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>ID</th>
+                      <th>Date de mission</th>
+                      <th>Livreur</th>
+                      <th>Address</th>
+                      <th>Options</th>
+                      <th>Detais</th>
+                    </tr>
+                  </thead>
+
+                  <tbody *ngIf="missions && missions.lenghth !=0">
+                    <tr *ngFor="let mission of missions">
+                      <td>
+                        {{ mission.id}}
+                      </td>
+                      <td>
+                        {{ mission.creationDate}}
+                      </td>
+                      <td>
+                        {{ mission.delivery.name}}
+                      </td>
+                      <td>
+                        {{ mission.address.name}}
+                      </td>
+                      <td>
+                        <button>Options</button>
+                      </td>
+                      <td>
+                        <button>Details</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+</div>
